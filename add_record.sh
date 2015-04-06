@@ -26,11 +26,12 @@ if [[ "$(ls | grep ${DOMAIN}.db)" == ""  ]]; then
 	exit 1
 fi
 
+#deleting line
 if [ "$MODE" == "1" ]; then
         sed -i "" 's/'"$RECORD"'//g' ${DOMAIN}.db
+#adding line
 elif [ "$(cat ${DOMAIN}.db | grep "${RECORD}")" == "" ]; then
-	#checks if ip is valid
-	echo "\n"$IP"\n"
+	#checking if ip is valid
  	if [[ ! $IP =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
  		echo wrong ip
  	     	exit 1
