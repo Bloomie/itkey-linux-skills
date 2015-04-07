@@ -15,13 +15,13 @@ RECORD="${HOST} IN A ${IP}"
 # add error handling
 
 #checks args number
-if [[ $# != 3 && $# != 4 ]]; then
+if [[ $# -lt 3 ]]; then
 	echo wrong args
 	exit 1
 fi
 
 #checks if zone file exits
-if [[ "$(ls | grep ${DOMAIN}.db)" == ""  ]]; then
+if [[ ! -f "/var/lib/bind/db.${DOMAIN}" ]]; then
 	echo file not found
 	exit 1
 fi
@@ -29,6 +29,10 @@ fi
 #deleting line
 if [ "$MODE" == "1" ]; then
         sed -i "" 's/'"$RECORD"'//g' ${DOMAIN}.db
+        if [[ $? -ne 0 ]]; then
+                echo sed failure
+                exit 1
+        fi
 #adding line
 elif [ "$(cat ${DOMAIN}.db | grep "${RECORD}")" == "" ]; then
 	#checking if ip is valid
