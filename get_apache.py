@@ -4,6 +4,18 @@ import logging
 from optparse import OptionParser
 
 
+logging.basicConfig(level = logging.INFO)
+logger = logging.getLogger("GetApache")
+
+
+def log(fn):
+    def wrapper(*args, **kwargs):
+        logger.info("Starting")
+        return fn(*args, **kwargs)
+    return wrapper
+
+
+
 def set_options():
     parser = OptionParser()
     
@@ -21,37 +33,37 @@ def set_options():
     return parser.parse_args()[0]
 
 
+@log
+def local_install(package_name):
+    subprocess.call(["sudo", "apt-get", "install", package_name])
+
+
+@log
+def ssh_install(options, package_name):
+
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.connect(hostname=options.host, username=options.user, password=options.password, port=options.port)
+
+    command = 'sudo -S apt-get -y install %s' % package_name
+    stdin, stdout, stderr = client.exec_command(command)
+    logger.info(stdout.read())
+
+    client.close()
+
+
 def main():
     options = set_options()
     package_name = "apache2"
 
-    logging.basicConfig(level = logging.INFO)
-    logger = logging.getLogger("GetApache")
-
     if options.mode == "local":
-
-        logger.info("Started")
-        subprocess.call(["sudo", "apt-get", "install", package_name])
-        logger.info("Started")
+        local_install(package_name)
 
     elif options.mode == "ssh":
-        
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(hostname=options.host, username=options.user, password=options.password, port=options.port)
-
-        logger.info("Started")
-    
-        command = 'sudo -S apt-get -y install %s' % package_name
-        stdin, stdout, stderr = client.exec_command(command)
-
-        logger.info(stdout.read())
-        logger.info("Closed")
-
-        client.close()
+        ssh_install(options, package_name)
     
     else: 
-        print "wrong options: use -h to get help"
+        logger.error("Invalid options, try --help")
 
 
 if __name__ == "__main__":
