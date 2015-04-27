@@ -13,19 +13,24 @@ Methods
     **method provides you with a few urls to monitor current configuration state,
     more features coming soon!**
 
-    */<node>/checklist*
-
+    */services/<node>/checklist*
+ 
         ``returns check-up list for specified node``
 
-    *<node>/actionlist*
-
+    */services/<node>/actionlist*
+    
         ``returns action list for specified node``
 
-    *<node>/mapping*
+    */services/<node>/mapping*
 
-        ``returns mapping between check-ups and actions``
+        ``returns mapping between check-ups and actions`` 
 
-- POST
+- **POST**
 
     **posting data is expected in yaml format, more could be found at ..**
 
+            
+
+
+    
+    
