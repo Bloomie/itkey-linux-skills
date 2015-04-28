@@ -33,8 +33,9 @@ Node: <testnode>
                      group: <action group name1>
                      action: <test command1>
 
-                     ...
+                 ...
 
+                 -<action nameN>:
                      group: <action group nameN>
                      action: <test commandN>
 
@@ -70,4 +71,3 @@ Node: <testnode>
                 ...
 
                 -<condition nameN>
-                   
